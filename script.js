@@ -171,9 +171,9 @@ function initEdit() {
   loadEdit(document.getElementById('dateInput').value);
 }
 
-async function excluirEscala(data) {
+async function excluirEscala(data, msg) {
   await supabaseClient.from('escalas').delete().eq('data', data);
-  alert('Excluído');
+  if (msg !== 'noMsg') { alert('Excluído'); }
   renderPanel();
 }
 
@@ -298,16 +298,8 @@ function modalSave() {
 
 /* ---------- SALVAR / carregar ---------- */
 async function saveCurrent() {
-  /*
-  const date = document.getElementById('dateInput').value;
-  if (!date) return alert('Escolha uma data');
-  const program = document.getElementById('programType').value;
-  const custom = document.getElementById('customProgram').value.trim();
-  const programType = (program === 'Outro' && custom) ? custom : program;
-  const payload = { date, program_type: programType, roles: {} };
-  ROLES.forEach(r => { payload.roles[r.key] = getRoleSelection(r.key); });
-  SCHEDULES[date] = payload; saveLocal(); alert('Escala salva'); renderPanel();
-  */
+  
+
 
   const data = document.getElementById('dateInput').value
   const tipo = document.getElementById('programType').value
@@ -322,24 +314,50 @@ async function saveCurrent() {
   const oferta = document.getElementById('oferta')?.textContent ?? '--'
   const pregador = document.getElementById('pregador')?.textContent ?? '--'
 
-  const escala = {
-    data: data,
-    tipo: tipo,
-    abertura: abertura,
-    ministro: ministro,
-    back: back,
-    guitarra: guitarra,
-    violao: violao,
-    baixo: baixo,
-    teclado: teclado,
-    bateria: bateria,
-    oferta: oferta,
-    pregador: pregador
+  const v = verificaEscalaExiste(data);
+
+  if( v ) {
+    excluirEscala(data, 'noMsg')
   }
 
-  await supabaseClient.from('escalas').insert([escala]);
-  alert("Escala Criada");
+  const escala = {
+      data: data,
+      tipo: tipo,
+      abertura: abertura,
+      ministro: ministro,
+      back: back,
+      guitarra: guitarra,
+      violao: violao,
+      baixo: baixo,
+      teclado: teclado,
+      bateria: bateria,
+      oferta: oferta,
+      pregador: pregador
+    }
 
+    await supabaseClient.from('escalas').insert([escala]);
+    alert("Escala Criada");
+
+
+  
+
+}
+
+async function verificaEscalaExiste(date) {
+  const { data, error } = await supabaseClient
+    .from('escalas')
+    .select('*')
+    .eq('data', date)
+
+  if (error) {
+    console.error('Erro na busca', error);
+    return;
+  }
+
+  if (data && data.length > 0) {
+    return true;
+  }
+  return false;
 }
 
 
