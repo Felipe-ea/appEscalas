@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Escalas do Louvor — Design</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: '#0ea5e9',
+                        soft: '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+            background: linear-gradient(180deg, #071025 0%, #071725 100%);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(6px);
+        }
+
+        .accent {
+            color: #d1fae5;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        /* mobile-friendly modal centering */
+        .modal-open {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen text-slate-100">
+    <div class="max-w-5xl mx-auto p-6 lg:p-8">
+
+        <header class="flex flex-col items-center justify-center gap-6 mb-8">
+            <div class="flex justify-center">
+                <h1 class="text-3xl lg:text-3xl font-bold">App Escalas</h1>
+            </div>
+            <nav class="flex justify-between gap-3 lg:gap-10">
+                <button id="tab-panel" class="w-34 lg:w-32 px-6 py-4 rounded-lg lg:rounded-full glass text-sm font-medium hover:bg-brand">Painel</button>
+                <button id="tab-edit" class="w-34 lg:w-32 px-6 py-4 rounded-lg lg:rounded-full glass text-sm font-medium hover:bg-brand">Criar/Editar</button>
+                <button id="tab-history" class="w-34 lg:w-32 px-6 py-4 rounded-lg lg:rounded-full glass text-sm font-medium hover:bg-brand">Histórico</button>
+            </nav>
+        </header>
+
+        <!-- PAINEL: próximos 3 cultos -->
+        <main id="panelView" class="space-y-6">
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- cards serão preenchidos por JS -->
+            </section>
+        </main>
+
+        <section id="editView" class="hidden glass rounded-2xl p-6 mt-6">
+            <div class="flex flex-col lg:flex-row gap-6">
+                <div class="flex-1">
+                    <label class="text-sm text-slate-300">Data</label>
+                    <input id="dateInput" type="date"
+                        class="mt-2 w-full p-3 rounded-lg bg-transparent border border-slate-700" />
+
+                    <label class="text-sm text-slate-300 mt-4 block">Programação</label>
+                    <select id="programType" class="mt-2 w-full p-3 rounded-lg bg-transparent border border-slate-700">
+                        <option value="Culto">Culto</option>
+                        <option value="Vigília">Vigília</option>
+                        <option value="Santa Ceia">Santa Ceia</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                    <input id="customProgram" type="text" placeholder="Se selecionou 'Outro', descreva aqui"
+                        class="mt-2 w-full p-3 rounded-lg bg-transparent border border-slate-700" />
+
+                    <div class="mt-6 flex gap-3">
+                        <button id="saveBtn" class="px-4 py-2 bg-brand rounded-md font-semibold">Salvar</button>
+                        <button id="clearBtn" class="px-4 py-2 glass rounded-md">Limpar</button>
+                        <button id="deleteBtn" class="px-4 py-2 bg-red-600 rounded-md">Excluir</button>
+                    </div>
+
+                    <p class="text-slate-400 text-sm mt-4">Ao selecionar os membros, os nomes aparecerão como "chips"
+                        abaixo do cargo. Para cargos com múltiplos integrantes (ex.: Back Vocal) você pode selecionar
+                        mais de um.</p>
+                </div>
+
+                <div class="w-full lg:w-96">
+                    <h3 class="text-lg font-semibold mb-3">Equipe (selecione membros)</h3>
+                    <div id="rolesList" class="space-y-3 max-h-[60vh] overflow-auto pr-2">
+                        <!-- cada role tem um card gerado por JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HISTÓRICO -->
+        <section id="historyView" class="hidden mt-6">
+            <div class="glass rounded-2xl p-6">
+                <div class="flex flex-col lg:flex-row gap-4 items-center justify-between">
+                    <div class="flex gap-3 items-center">
+                        <label class="text-sm text-slate-300">Período</label>
+                        <select id="historyPeriod" class="p-2 rounded-md bg-transparent border border-slate-700">
+                            <option value="1">Última semana</option>
+                            <option value="2">Últimas 2 semanas</option>
+                            <option value="4">Últimas 4 semanas</option>
+                        </select>
+                        <label class="text-sm text-slate-300">a partir de</label>
+                        <input id="historyAnchor" type="date"
+                            class="p-2 rounded-md bg-transparent border border-slate-700" />
+                        <button id="historyLoad" class="px-3 py-2 bg-brand rounded-md">Carregar</button>
+                    </div>
+                    <div class="text-sm text-slate-400">Mostrando escalas salvas no período.</div>
+                </div>
+
+                <div id="historyList" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <!-- items gerados por JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- MODAL DE SELEÇÃO -->
+        <div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center px-4">
+            <div class="absolute inset-0 bg-black/60" onclick="closeModal()"></div>
+            <div class="relative max-w-xl w-full bg-slate-900/80 border border-slate-700 rounded-lg p-4 glass z-10">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 id="modalTitle" class="font-semibold">Selecionar membros</h4>
+                    <button onclick="closeModal()" class="text-slate-400">✕</button>
+                </div>
+                <div id="modalContent" class="max-h-72 overflow-auto space-y-2">
+                    <!-- lista de usuários com checkboxes gerada por JS -->
+                </div>
+                <div class="mt-4 flex justify-end gap-2">
+                    <button class="px-4 py-2 glass rounded-md" onclick="closeModal()">Cancelar</button>
+                    <button class="px-4 py-2 bg-brand rounded-md" onclick="modalSave()">Salvar</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
