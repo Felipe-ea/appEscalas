@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Escalas do Louvor — Design</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2.45.1/dist/umd/supabase.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -23,6 +25,11 @@
         body {
             font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
             background: linear-gradient(180deg, #071025 0%, #071725 100%);
+        }
+
+        .input-calendario-branco::-webkit-calendar-picker-indicator {
+            filter: invert(100%);
+            /* Usa 100% para inverter para branco */
         }
 
         .glass {
@@ -57,9 +64,12 @@
                 <h1 class="text-3xl lg:text-3xl font-bold">App Escalas</h1>
             </div>
             <nav class="flex justify-between gap-3 lg:gap-10">
-                <button id="tab-panel" class="w-34 lg:w-32 px-6 py-4 rounded-lg lg:rounded-full glass text-sm font-medium hover:bg-brand">Painel</button>
-                <button id="tab-edit" class="w-34 lg:w-32 px-6 py-4 rounded-lg lg:rounded-full glass text-sm font-medium hover:bg-brand">Criar/Editar</button>
-                <button id="tab-history" class="w-34 lg:w-32 px-6 py-4 rounded-lg lg:rounded-full glass text-sm font-medium hover:bg-brand">Histórico</button>
+                <button id="tab-panel"
+                    class="w-34 lg:w-32 px-6 py-4 rounded-lg lg:rounded-full glass text-sm font-medium hover:bg-brand">Painel</button>
+                <button id="tab-edit"
+                    class="w-34 lg:w-32 px-6 py-4 rounded-lg lg:rounded-full glass text-sm font-medium hover:bg-brand">Criar/Editar</button>
+                <button id="tab-history"
+                    class="hidden w-34 lg:w-32 px-6 py-4 rounded-lg lg:rounded-full glass text-sm font-medium hover:bg-brand">Histórico</button>
             </nav>
         </header>
 
@@ -75,27 +85,24 @@
                 <div class="flex-1">
                     <label class="text-sm text-slate-300">Data</label>
                     <input id="dateInput" type="date"
-                        class="mt-2 w-full p-3 rounded-lg bg-transparent border border-slate-700" />
+                        class="input-calendario-branco mt-2 w-full p-3 rounded-lg bg-transparent border border-slate-700 lg:text-slate-400" />
 
                     <label class="text-sm text-slate-300 mt-4 block">Programação</label>
-                    <select id="programType" class="mt-2 w-full p-3 rounded-lg bg-transparent border border-slate-700">
+                    <select id="programType"
+                        class="mt-2 w-full p-3 rounded-lg bg-transparent border border-slate-700 lg:text-slate-400">
                         <option value="Culto">Culto</option>
                         <option value="Vigília">Vigília</option>
                         <option value="Santa Ceia">Santa Ceia</option>
-                        <option value="Outro">Outro</option>
+                        <option value="--">--</option>
                     </select>
-                    <input id="customProgram" type="text" placeholder="Se selecionou 'Outro', descreva aqui"
-                        class="mt-2 w-full p-3 rounded-lg bg-transparent border border-slate-700" />
+                    <!-- <input id="customProgram" type="text" placeholder="Se selecionou 'Outro', descreva aqui"
+                        class="mt-2 w-full p-3 rounded-lg bg-transparent border border-slate-700" /> -->
 
                     <div class="mt-6 flex gap-3">
                         <button id="saveBtn" class="px-4 py-2 bg-brand rounded-md font-semibold">Salvar</button>
                         <button id="clearBtn" class="px-4 py-2 glass rounded-md">Limpar</button>
                         <button id="deleteBtn" class="px-4 py-2 bg-red-600 rounded-md">Excluir</button>
                     </div>
-
-                    <p class="text-slate-400 text-sm mt-4">Ao selecionar os membros, os nomes aparecerão como "chips"
-                        abaixo do cargo. Para cargos com múltiplos integrantes (ex.: Back Vocal) você pode selecionar
-                        mais de um.</p>
                 </div>
 
                 <div class="w-full lg:w-96">
